@@ -1,10 +1,11 @@
-using System.Net.Http.Json;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Windows.UI.Notifications;
 using Windows.UI.Notifications.Management;
 
 // Optional: pass a timeout seconds, default 60
 var timeoutSeconds = 300;
+var targetAppPath = @"C:\Program Files\qBittorrent\qbittorrent.exe"; // CHANGE THIS TO YOUR EXECUTABLE PATH
 var deadline = DateTimeOffset.Now.AddSeconds(timeoutSeconds);
 
 var listener = UserNotificationListener.Current;
@@ -28,19 +29,17 @@ while (DateTimeOffset.Now < deadline)
     if (match is not null)
     {
         Console.WriteLine(match.Value.Port);
-        var postUrl = "http://localhost:21444/api/v2/app/setPreferences";
-
-        using var http = new HttpClient();
-        // Customize payload to what your receiver expects
-        var payloadObj = new { listen_port = match.Value.Port };
-        var jsonString = System.Text.Json.JsonSerializer.Serialize(payloadObj);
-        var content = new FormUrlEncodedContent(new[]
+        try
         {
-             new KeyValuePair<string, string>("json", jsonString)
-        });
-
-        var resp = await http.PostAsync(postUrl, content);
-        resp.EnsureSuccessStatusCode();
+            Console.WriteLine($"Launching {targetAppPath} with port {match.Value.Port}...");
+            Process.Start(targetAppPath, $"--torrenting-port={match.Value.Port}");
+            Console.WriteLine("Process started successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Failed to start process: {ex.Message}");
+            return 1;
+        }
 
         return 0;
     }
