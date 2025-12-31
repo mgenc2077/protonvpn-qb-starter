@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 using Windows.UI.Notifications;
 using Windows.UI.Notifications.Management;
 
-// Optional: pass a timeout seconds, default 60
+// Optional: pass a timeout seconds, default 300 seconds = 5 minutes
 var timeoutSeconds = 300;
-var targetAppPath = @"C:\Program Files\qBittorrent\qbittorrent.exe"; // CHANGE THIS TO YOUR EXECUTABLE PATH
+var targetAppPath = args.Length > 0 ? args[0] : @"C:\Program Files\qBittorrent\qbittorrent.exe";
 var deadline = DateTimeOffset.Now.AddSeconds(timeoutSeconds);
 
 var listener = UserNotificationListener.Current;
