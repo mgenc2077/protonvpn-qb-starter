@@ -1,6 +1,6 @@
 # protonvpn-qb-starter
 
-A simple utility to detect the active listening port from ProtonVPN toast notifications and automatically launch a torrent client (or any other application) with the detected port configured. You can add PortGrabber.exe to the Task Scheduler to run at startup for a headless start (I am currently using it this way).
+A simple utility to detect the active listening port from ProtonVPN toast notifications and automatically launch a torrent client (or any other application) with the detected port configured. You can add PortGrabber.exe to the Task Scheduler to run at startup for a headless start (I am currently using it this way). 
 
 ![protonvpn-qb-starter](https://github.com/mgenc2077/protonvpn-qb-starter/blob/main/screenshot.png?raw=true)
 
