@@ -1,8 +1,6 @@
 # protonvpn-qb-starter
 
-A simple utility to detect the active listening port from ProtonVPN toast notifications and automatically launch a torrent client (or any other application) with the detected port configured. You can add PortGrabber.exe to the Task Scheduler to run at startup for a headless start (I am currently using it this way). 
-
-![protonvpn-qb-starter](https://github.com/mgenc2077/protonvpn-qb-starter/blob/main/screenshot.png?raw=true)
+A simple utility to detect the active listening port from ProtonVPN toast notifications and automatically launch a torrent client (or any other application) with the detected port configured.
 
 ## How it Works
 
@@ -18,11 +16,19 @@ If run without arguments, the application attempts to launch **qBittorrent** at 
 
 It passes the argument: `--torrenting-port=<PORT>`
 
+### Startup Mode
+To ensure the application only reacts to *recent* port changes (e.g., from a fresh boot), use the `--startup` flag. This ignores notifications older than **3 minutes**.
+
+```powershell
+PortGrabber.exe --startup
+```
+
 ### Custom Application
-You can specify a different executable path as a command-line argument:
+You can specify a different executable path as a command-line argument. You can combine this with the `--startup` flag.
 
 ```powershell
 PortGrabber.exe "C:\Path\To\Your\Application.exe"
+PortGrabber.exe "C:\Path\To\Your\Application.exe" --startup
 ```
 
 ## Building

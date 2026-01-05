@@ -5,8 +5,12 @@ using Windows.UI.Notifications.Management;
 
 // Optional: pass a timeout seconds, default 300 seconds = 5 minutes
 var timeoutSeconds = 300;
-var targetAppPath = args.Length > 0 ? args[0] : @"C:\Program Files\qBittorrent\qbittorrent.exe";
+var argsList = args.ToList();
+var startupMode = argsList.Remove("--startup");
+var targetAppPath = argsList.Count > 0 ? argsList[0] : @"C:\Program Files\qBittorrent\qbittorrent.exe";
+
 var deadline = DateTimeOffset.Now.AddSeconds(timeoutSeconds);
+var startupCutoff = DateTimeOffset.Now.AddMinutes(-3);
 
 var listener = UserNotificationListener.Current;
 
@@ -23,9 +27,14 @@ while (DateTimeOffset.Now < deadline)
 {
     // Get recent toast notifications
     var notifs = await listener.GetNotificationsAsync(NotificationKinds.Toast);
+    
+    // Filter by time if in startup mode
+    var relevantNotifs = startupMode 
+        ? notifs.Where(n => n.CreationTime >= startupCutoff).ToList() 
+        : (IReadOnlyList<UserNotification>)notifs;
 
     // Find latest ProtonVPN notification that contains "Active Port Number: <port>"
-    var match = FindLatestProtonVpnPort(notifs);
+    var match = FindLatestProtonVpnPort(relevantNotifs);
     if (match is not null)
     {
         Console.WriteLine(match.Value.Port);
